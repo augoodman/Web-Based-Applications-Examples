@@ -3,6 +3,7 @@ For this lab (in activity 2), I followed Dr. Mehlhause's example for the loading
 ```
 .load <respective_test_file_name_here>.js
 ```
+My versions of the test files are included for reference.
 
 ##Activity 2 Part A Commands
 ```
