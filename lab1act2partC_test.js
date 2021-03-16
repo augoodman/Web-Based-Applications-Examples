@@ -1,6 +1,12 @@
 console.log("TESTING calc()");
+
+// create a Calc object
 var c = new Calc();
+
+// initialize stack
 c.stack = [0,];
+
+// test calc function and print results to console
 console.log(c.calc('{"op":"add","number":5}'));
 console.log(c.calc('{"op":"push","number":5}'));
 console.log(c.calc('{"op":"pop"}'));
@@ -14,8 +20,11 @@ console.log(c.calc('{"op":"pop"}'));
 console.log(c.calc('{"op":"pop"}'));
 console.log(c.calc('{"op":"pop"}'));
 console.log('\n');
+
 console.log("TESTING exec()");
-var expC =
+
+// create an array of above expressions nested with expected result
+var expA =
     [
         {"exp":{"op":"add","number":5},"expected":5},
         {"exp":{"op":"push","number":5},"expected":5},
@@ -28,4 +37,6 @@ var expC =
         {"exp":{"op":"pop"},"expected":0},
         {"exp":{"op":"pop"},"expected":undefined}
     ];
-c.exec(expC);
+
+// test exec function
+c.exec(expA);
