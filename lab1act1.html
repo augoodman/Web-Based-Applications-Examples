@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	</head>
+	<body>
+		All items must be filled.
+		<form action="https://postman-echo.com/get?" method="get">
+			<label for="color">Color: </label><input type="color" id="color" name="augoodma_color" required><br>
+			<label for="date">Date: </label><input type="date" id="date" name="augoodma_date" min="2010-01-01" max="2017-09-01" required><br>
+			<label for="datetime-local">Datetime-local: </label><input type="datetime-local" id="datetime-local" name="augoodma_datetime-local" required><br>
+			<label for="email">Email: </label><input type="email" id="email" name="augoodma_email" required><br>
+			<label for="month">Month: </label><input type="month" id="month" name="augoodma_month" required><br>
+			<label for="number">Number: </label><input type="number" id="number" name="augoodma_number" value="100" required><br>
+			<label for="range">Range: </label><input type="range" id="range" name="augoodma_range" min="-10" max="10" required><br>
+			<label for="search">Search: </label><input type="search" id="search" name="augoodma_search" required><br>
+			<label for="tel">Tel: </label><input type="tel" id="tel" name="augoodma_tel" required><br>
+			<label for="time">Time: </label><input type="time" id="time" name="augoodma_time" required><br>
+			<label for="url">URL: </label><input type="url" id="url" name="augoodma_url" required><br>
+			<label for="week">Week: </label><input type="week" id="week" name="augoodma_week" required><br>
+			<label for="routing">Routing number:</label><input type="text" name="augoodma_RTN" pattern="[0-9]{9}[ ]{1}[0-9]{12}[ ]{1}[0-9]{4}" size="27" required><br>
+			<input type="submit">
+		</form>
+	</body>
+</html>
