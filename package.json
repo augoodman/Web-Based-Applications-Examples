@@ -1,0 +1,20 @@
+{
+  "name": "lab2",
+  "version": "1.0.0",
+  "description": "SER 421 Lab 2",
+  "main": "FAQ00.js",
+  "scripts": {
+    "l2a1": "node ./FAQ00_test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/augoodma/SER421.git"
+  },
+  "author": "Andrew Goodman (augoodma)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/augoodma/SER421/issues"
+  },
+  "homepage": "https://github.com/augoodma/SER421#readme",
+  "type": "module"
+}
