@@ -1,27 +1,67 @@
-const fs = require('fs');
+/**
+ * File: FAQ00.js
+ * SER 421
+ * Lab 2
+ *
+ * This file implements a Javascript-based question and answer service as specified in Activity 1.
+ * The FAQ class contains behaviors for performing CRUD operations on the persistent store (QA.json)
+ * and filter-based searching function for one or more criteria.
+ *
+ * Functions are:
+ *    write(qa)
+ *    updateAnswer(id, answer)
+ *    updateTags(id, tags)
+ *    delete(id)
+ *    search(criteria, value)
+ *    readFile()
+ *    writeFile(json)
+ */
+/* imports */
+import fs from 'fs'
+/* global variables */
 const file = './QA.json'
 
 export class FAQ {
+    /* class variables */
     json = []
-
+    /* functions */
+    /*******************************************************************************************
+     * write(qa) - Writes a QA object to the data store.
+     *
+     * arguments:
+     *   string - formatted as JSON and represents one QA object to be written.
+     *
+     * returns:
+     *   nothing
+     */
     write(qa){
         this.readFile()
-        let id = Number.parse(Date.now())
-        JSON.parse(qa)
-        qa['id'] = id
-        this.json.push()
+        let id = parseInt(Date.now())
+        let qaJson = JSON.parse(qa)
+        qaJson['id'] = id
+        this.json.push(qaJson)
         console.log("Q&A added.")
-        let json = JSON.stringify(this.json)
+        let json = JSON.stringify(this.json, null, 4)
         this.writeFile(json)
     }
 
+    /*******************************************************************************************
+     * updateAnswer(id, answer) - Updates the 'answer' value of a QA object.
+     *
+     * arguments:
+     *   number - ID value of QA to be updated.
+     *   string - New 'answer' value.
+     *
+     * returns:
+     *   nothing
+     */
     updateAnswer(id, answer){
         this.readFile()
-        for (let i of this.json){
+        for (let i in this.json){
             if (this.json[i].id === id){
                 this.json[i].answer = answer
                 console.log("Answer updated.")
-                let json = JSON.stringify(this.json)
+                let json = JSON.stringify(this.json, null, 4)
                 this.writeFile(json)
                 return
             }
@@ -29,13 +69,23 @@ export class FAQ {
         console.log("Q&A not found.")
     }
 
+    /*******************************************************************************************
+     * updateTags(id, tags) - Updates the 'tags' value of a QA object.
+     *
+     * arguments:
+     *   number - ID value of QA to be updated.
+     *   string - New 'tags' value.
+     *
+     * returns:
+     *   nothing
+     */
     updateTags(id, tags){
         this.readFile()
-        for (let i of this.json){
+        for (let i in this.json){
             if (this.json[i].id === id){
                 this.json[i].tags = tags
                 console.log("Tags updated.")
-                let json = JSON.stringify(this.json)
+                let json = JSON.stringify(this.json, null, 4)
                 this.writeFile(json)
                 return
             }
@@ -43,13 +93,22 @@ export class FAQ {
         console.log("Q&A not found.")
     }
 
+    /*******************************************************************************************
+     * delete(id) - Deletes the specified QA object from the data store.
+     *
+     * arguments:
+     *   number - ID value of QA to be deleted.
+     *
+     * returns:
+     *   nothing
+     */
     delete(id){
         this.readFile()
-        for (let i of this.json){
+        for (let i in this.json){
             if (this.json[i].id === id){
-                delete this.json[i]
+                this.json.splice(i, 1)
                 console.log("Q&A deleted.")
-                let json = JSON.stringify(this.json)
+                let json = JSON.stringify(this.json, null, 4)
                 this.writeFile(json)
                 return
             }
@@ -57,73 +116,82 @@ export class FAQ {
         console.log("Q&A not found.")
     }
 
-    search(filter){
-        var jsonFilter = JSON.parse(filter)
+    /*******************************************************************************************
+     * search(criteria, value) - Searches the data store for the specified criteria and
+     * value(s).
+     *
+     * arguments:
+     *   Array - One or more criteria to use as filter
+     *   Array - One or more values to search based on filter(s)
+     *
+     * returns:
+     *   Set - Unique set of QA objects that meet the search criteria.
+     */
+    search(criteria, value){
         this.readFile()
-        if (jsonFilter.criteria === "author"){
-            let results = []
-            for (let i of this.json){
-                if (this.json[i].author === jsonFilter.value){
-                    results.push(this.this.json[i])
-                }
-            }
-            console.log("Author search complete.")
-            return results
-        }
-        else if (jsonFilter.criteria === "tags"){
-            let results = []
-            let filterTags = JSON.stringify(jsonFilter.value).split(', ')
-            for (let i of this.json){
-                let jsonTags = JSON.stringify(this.json[i]).split(', ')
-                for (let j of jsonTags){
-                    for (let k of filterTags){
-                        if (jsonTags[j] === filterTags[k]){
+        let results = []
+        for(let c in criteria) {
+            if (criteria[c] === "author") {
+                for (let i in this.json) {
+                    for (let j in value[c]) {
+                        if (this.json[i].author === value[c]) {
                             results.push(this.json[i])
                         }
                     }
                 }
-            }
-            console.log("Tag search complete.")
-            return results
-        }
-        else if (jsonFilter.criteria === "date"){
-            let results = []
-            let startDate = Date.parse(jsonFilter.value.startDate)
-            let endDate = Date.parse(jsonFilter.value.endDate)
-            for (let i of this.json){
-                if (this.json[i].date >= startDate && this.json[i].date <= endDate){
-                    results.push(this.json[i])
+                console.log("Author search complete.")
+            } else if (criteria[c] === "tags") {
+                for (let i in this.json) {
+                    let jsonTags = JSON.stringify(this.json[i].tags).replace(/"+/g, '').split(', ')
+                    for (let j in jsonTags) {
+                        for (let k in value[c]) {
+                            if (jsonTags[j] === value[c][k]) {
+                                results.push(this.json[i])
+                            }
+                        }
+                    }
                 }
+                console.log("Tag search complete.")
+            } else if (criteria[c] === "date") {
+                let startDate = Date.parse(value[c][0])
+                let endDate = Date.parse(value[c][1])
+                for (let i in this.json) {
+                    if (Date.parse(this.json[i].date) >= startDate && Date.parse(this.json[i].date) <= endDate) {
+                        results.push(this.json[i])
+                    }
+                }
+                console.log("Date search complete.")
             }
-            console.log("Date search complete.")
-            return results
         }
+        return [...new Set(results)]
     }
 
+    /*******************************************************************************************
+     * readFile() - Class helper function for reading data from QA.json
+     *
+     * arguments:
+     *   none
+     *
+     * returns:
+     *   nothing
+     */
     readFile(){
-        fs.readFileSync(file, 'utf8')
+        let jsonString = fs.readFileSync(file, 'utf8')
+        this.json = JSON.parse(jsonString)
         console.log("Read from file.")
     }
 
+    /*******************************************************************************************
+     * readFile() - Class helper function for writing data to QA.json
+     *
+     * arguments:
+     *   none
+     *
+     * returns:
+     *   nothing
+     */
     writeFile(json){
         fs.writeFileSync(file, json)
         console.log("Wrote to file.")
     }
 }
-// Constraints on the Q&A service:
-// C1. The class should prevent concurrent read/write problems (e.g. lost updates).
-// C2. A Q&A is described by the following attributes: question, answer, tags, author, date and id. You
-// can decide how you want to create a unique id (they can look different than the one in the
-// example)
-// C3. The persistent store for the Q&A service must be a JSON file named QA.json and in the same
-// directory as your top-level executable code. We will provide an example for you, and you are free
-// to generate and share additional test cases.
-
-// Overall Constraints:
-// C4. Put your code in 1 file, FAQ00.js.
-// C5. You do not have to write a user interface, but you do have to specify the API for your object
-// types in your README.txt, and provide example starting files and a sample test case of each
-// service. That is, you must provide examples of how to instantiate your service object, and how to
-// invoke it so we can test it manually.
-// C6. Your code must be clear and well-written.
-// C7. Use the synchronous file I/O features in NodeJS (it makes C1 MUCH easier).
