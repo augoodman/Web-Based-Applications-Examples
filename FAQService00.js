@@ -1,40 +1,80 @@
-// todo setup server on port 3000
-import fs from 'fs'
-import http from 'http'
-import url from 'url'
-
-const ROOT_DIR = "html/";
-
-var messages = ['Hello World', 'From a Node.jsserver', 'Take Luck'];
-http.createServer(function (req, res) {
-    var resBody = '';
-    var resMsg = '';
+var fs = require('fs');
+var http = require('http');
+var url = require('url');
+var qstring = require('querystring');
+var ROOT_DIR = "html/";
+var session = {}
+session.status = 0
+session.username = "some name"
+session.role = undefined
+http.createServer((req, res) => {
     var urlObj = url.parse(req.url, true, false);
-    var qstr = urlObj.query;
-    if (req.method === "GET") {
-        console.log(req.method);
-        if (!qstr.msg) {
-            resMsg = '<h2>No msgparameter</h2>\n';
-        } else {
-            resMsg = '<h1>' + messages[qstr.msg] + '</h2>';
+    console.log(urlObj);
+    if(urlObj.pathname === "/home"){
+        if(req.method === "POST"){
+            var reqData = ''
+            req.on('data', function (chunk) {
+                reqData += chunk
+            })
+            req.on('end', function() {
+                console.log('here');
+                var postParams = qstring.parse(reqData)
+                login(postParams.username, postParams.password, postParams.role)
+                if(session.status === 1){
+                    console.log("logged in as " + postParams.username)
+                    urlObj.pathname = "/faq"
+                }
+            })
         }
-        resBody = resBody + '<html><head><title>Simple HTTP Server</title></head>';
-        resBody = resBody + '<body>' + resMsg;
-        res.setHeader("Content-Type", "text/html");
-        res.writeHead(200);
-        res.end(resBody + '\n</body></html>');
-    } else if (req.method === "POST"){
-        var reqData= '';
-        req.on('data', function (chunk) {
-            reqData+= chunk;
-        });
-        req.on('end', function() {
-            var postParams= qstring.parse(reqData);
-            getWeather(postParams.city, res);
-        });
-    } else{
-        sendResponse(null, res);
+        else {
+            fs.readFile(ROOT_DIR + 'index.html', function (err, data) {
+                if (err) {
+                    res.writeHead(404);
+                    res.end(JSON.stringify(err));
+                    return;
+                }
+                res.writeHead(200, {
+                    'Content-Type': 'text/html'
+                })
+                res.end(data);
+            })
+        }
     }
-}).listen(3000);
+    else if(urlObj.pathname === "/faq"){
+        fs.readFile(ROOT_DIR + 'faq.html', function (err, data) {
+            if (err) {
+                res.writeHead(404);
+                res.end(JSON.stringify(err));
+                return;
+            }
+            res.writeHead(200, {
+                'Content-Type': 'text/html',
+                'Set-Cookie': 'last_user=' + session.username
+            })
+            res.end(data);
+        })
+    }
+}).listen(3000)
 
-// todo create instructor and student session classes
+var login = function(username, password, role){
+    console.log('Logging in...');
+    if (username === password) {
+        session.status = 1
+        session.username = username
+        session.role = role
+        console.log(session)
+    }
+    else{
+        session.status = 0
+        session.username = username
+        session.role = role
+        console.log(session)
+    }
+}
+
+var content_map = {
+    '/' : "default page",
+    '/home' : "home page",
+    '/faq' : "faq service"
+}
+// .load FAQService00.js
