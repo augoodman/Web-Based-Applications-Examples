@@ -1,8 +1,8 @@
-const fs = require('fs')
-const http = require('http')
-const url = require('url')
-const qstring = require('querystring')
-const ROOT_DIR = "html/"
+import fs from 'fs'
+import http from 'http'
+import url from 'url'
+import qstring from 'querystring'
+const ROOT_DIR = "html/";
 const session = {}
 session.status = 0
 session.username = undefined
@@ -55,16 +55,16 @@ function logout(req, res) {
 http.createServer((req, res) => {
     if(req.url === "/"){
         index = fs.readFile(ROOT_DIR + 'index.html', function (err, data) {
-                if (err) {
-                    res.writeHead(404)
-                    res.end(JSON.stringify(err))
-                    return;
-                }
-                res.writeHead(200, {
-                    'Content-Type': 'text/html'
-                })
-                res.end(data);
+            if (err) {
+                res.writeHead(404)
+                res.end(JSON.stringify(err))
+                return;
+            }
+            res.writeHead(200, {
+                'Content-Type': 'text/html'
             })
+            res.end(data);
+        })
     }
     if(req.url === "/home" && req.method === "POST") {
         var reqData = ''
@@ -105,7 +105,7 @@ http.createServer((req, res) => {
         req.on('end', function () {
             logout(req, res)
             index = fs.readFileSync(ROOT_DIR + 'index.html').toString() +
-            console.log("Logged out.")
+                console.log("Logged out.")
         })
     }
 }).listen(3000)

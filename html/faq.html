@@ -5,6 +5,12 @@
     <title>FAQ Service</title>
 </head>
 <body>
-
+    <div id="session">
+        <h1>Welcome {{session.username}}</h1>
+        <h3>View Q&A</h3>
+        <form action="http://localhost:3000/" method="post">
+            <input type="submit" value="Logout">
+        </form>
+    </div>
 </body>
 </html>
