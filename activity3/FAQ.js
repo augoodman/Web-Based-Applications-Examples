@@ -17,11 +17,11 @@
  *    writeFile(json)
  */
 /* imports */
-import fs from 'fs'
+var fs = require('fs')
 /* global variables */
 const file = './QA.json'
 
-export class FAQ {
+class FAQ {
     /* class variables */
     json = []
     /* functions */
@@ -195,3 +195,4 @@ export class FAQ {
         console.log("Wrote to file.")
     }
 }
+exports.FAQ=FAQ

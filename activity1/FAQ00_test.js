@@ -5,10 +5,10 @@
  *
  * This file contains a simple test stub for testing FAQ00.js.
  */
-import {FAQ} from "./FAQ00.js"
+const {FAQ} = require("./FAQ00.js")
 
 // create a FAQ object
-const faq = new FAQ();
+let faq = new FAQ();
 
 // test write and print results to console
 console.log("TEST 1")
@@ -39,7 +39,7 @@ faq.updateTags(t3[0], t3[1])
 
 // test delete Q&A and print results to console
 console.log("\nTEST 4")
-let t4 = 1616095528900
+let t4 = 1567311491853.5676
 console.log("Deleting Q&A with ID: " + t4)
 faq.delete(t4)
 
@@ -59,7 +59,7 @@ let tagSearch = faq.search(t6[0], t6[1])
 console.log("Tag search returned " + tagSearch.length + " results:")
 console.log(tagSearch)
 
-// test search by tags and print results to console
+// test search by date and print results to console
 console.log("\nTEST 7")
 let t7 = [["date"], [["2019-09-01", "2019-09-30"]]]
 console.log("Searching in date range: " + t7[1])
