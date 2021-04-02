@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  h1= 'Welcome'
+  h2= title
+  p #{article}
+  p
+    strong User Activity
+  br
+  p
+    strong Add a comment
+  form(method='POST' action='/')
+    input(type='text' id='comment_id' value='' placeholder='Comment ID')
+    br
+    input(type='text' id='comment' value='' placeholder='Comment')
+    br
+    input(type='submit' value='Add Comment')
+    br
+  p
+    strong Comments(#{numComments})
+  p
+    strong Delete specific comment
+  form(method='DELETE' action='/')
+    input(type='text' id='delete_id' value='' placeholder='Delete ID')
+    input(type='submit' value='Delete Comment')
+    br
+  p #{comments}
