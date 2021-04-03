@@ -6,12 +6,14 @@ const article = fs.readFileSync('articles/article.txt', 'UTF-8');
 const lines = article.split(/\r?\n/);
 let comments = [];
 let activities = [];
+let result = '';
 let title = '';
 let body = '';
 
 const reset = function () {
   activities = [];
   writeFile([]);
+  result = 'User activities and comments reset.';
   console.log('User activities and comments reset.');
 };
 
@@ -19,54 +21,65 @@ const update = function (action, req) {
   if (action === 'add') {
     activities.push('add,' + req.body.id + ',' + req.body.comment + ',' + req.get('user-agent'));
   } else if (action === 'del') {
-    activities.push('del,' + req.body.id + ',' + req.body.comment + ',' + req.get('user-agent'));
-  } else if (action === 'undo') {
-    let undo = activities.pop().split(',');
-    if (undo[0] === 'add') {
-      console.log('undo add')
-      for (let i in comments) {
-        if (parseInt(comments[i].id) === parseInt(undo[1])) {
-          comments.splice(i, 1);
-          writeFile(comments);
-          return;
-        }
+    let comment = '';
+    for(let i in comments){
+      if(parseInt(comments[i].id) === parseInt(req.body.id)){
+        comment = comments[i].comment;
       }
-    } else if (undo[0] === 'del') {
-      console.log('undo del')
-      comments.push({'id': undo[1], 'comment': undo[2]});
+    }
+    activities.push('delete,' + req.body.id + ',' + comment + ',' + req.get('user-agent'));
+  } else if (action === 'undo') {
+    if(activities.length > 0) {
+      let undo = activities.pop().split(',');
+      if (undo[0] === 'add') {
+        for (let i in comments) {
+          if (parseInt(comments[i].id) === parseInt(undo[1])) {
+            comments.splice(i, 1);
+            writeFile(comments);
+            return;
+          }
+        }
+      } else if (undo[0] === 'delete') {
+        comments.push({'id': undo[1], 'comment': undo[2]});
+        writeFile(comments);
+      }
     }
   }
   console.log('User activities updated.');
 };
 
 const add = function (req) {
+  update('add', req);
   for (let i in comments) {
     if (comments[i].id === req.body.id) {
+      result = 'Comment with given ID already exists.';
       console.log('Comment with given ID already exists.');
       return;
     }
     if (req.body.comment === '') {
+      result = 'Comment cannot be empty.';
       console.log('Comment cannot be empty.');
       return;
     }
   }
   comments.push({'id': req.body.id, 'comment': req.body.comment});
   writeFile(comments);
-  update('add', req);
-  console.log('Comment added.')
+  result = 'Comment added.';
+  console.log('Comment added.');
 };
 
 const del = function (req) {
+  update('del', req);
   for (let i in comments) {
     if (parseInt(comments[i].id) === parseInt(req.body.id)) {
       comments.splice(i, 1);
       writeFile(comments);
-      update('del', req);
+      result = 'Comment deleted.';
       console.log('Comment deleted.');
       return;
     }
   }
-  //use pug conditionals to display errors throughout
+  result = 'Comment with given ID does not exist.';
   console.log('Comment with given ID does not exist.');
 };
 
@@ -90,8 +103,10 @@ router.get('/', function(req, res, next) {
     title: title,
     article: body,
     numComments: comments.length,
-    comments: comments
+    comments: comments,
+    result: result
   });
+  result = '';
 });
 
 /* GET view page. */
