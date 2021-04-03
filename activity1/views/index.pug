@@ -20,17 +20,17 @@ block content
     br
     input(type='submit' value='Add Comment')
     br
-  form(method='POST' action='/' name='undo' id='undo')
-    input(type='submit' value='Undo')
+  form(method='GET' action='/undo')
+    button(type='submit' value='Undo') Undo
     br
   p
     strong Comments (#{numComments})
     ul
-      for i in comments
+      each i in comments
         li= 'ID ' + i.id + ': ' + i.comment
   p
     strong Delete specific comment
-  form(method='DELETE' action='/' name='delete_comment' id='delete_comment')
+  form(method='POST' action='/delete' name='delete_comment' id='delete_comment')
     input(type='text' name='id' placeholder='Comment ID')
     input(type='submit' value='Delete Comment')
     br
