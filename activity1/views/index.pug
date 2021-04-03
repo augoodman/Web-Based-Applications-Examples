@@ -1,27 +1,36 @@
 extends layout
 
 block content
-  h1= 'Welcome'
+  h1 Welcome
   h2= title
   p #{article}
   p
     strong User Activity
+    form(method='GET' action='/view')
+      input(type='submit' value='View User Activity')
+    form(method='GET' action='/reset')
+      button(type='submit' value='Reset') Reset
   br
   p
     strong Add a comment
-  form(method='POST' action='/')
-    input(type='text' id='comment_id' value='' placeholder='Comment ID')
+  form(method='POST' action='/add' name='add_comment' id='add_comment')
+    input(type='text' name='id' placeholder='Comment ID')
     br
-    input(type='text' id='comment' value='' placeholder='Comment')
+    input(type='text' name='comment' placeholder='Comment')
     br
     input(type='submit' value='Add Comment')
     br
+  form(method='POST' action='/' name='undo' id='undo')
+    input(type='submit' value='Undo')
+    br
   p
-    strong Comments(#{numComments})
+    strong Comments (#{numComments})
+    ul
+      for i in comments
+        li= 'ID ' + i.id + ': ' + i.comment
   p
     strong Delete specific comment
-  form(method='DELETE' action='/')
-    input(type='text' id='delete_id' value='' placeholder='Delete ID')
+  form(method='DELETE' action='/' name='delete_comment' id='delete_comment')
+    input(type='text' name='id' placeholder='Comment ID')
     input(type='submit' value='Delete Comment')
     br
-  p #{comments}
