@@ -1,0 +1,25 @@
+extends layout
+
+block content
+    h1 #{title}
+    h3 #{question}
+    form(method='POST' action = '/question' name = 'next' id = 'next')
+        for i in options
+            input(type = 'radio' name = 'response' value = i)
+            label= i
+            if preference
+                br
+        if id > 1
+            input(type = 'submit' name = 'prev' value = 'Previous')
+        if id < size
+            input(type = 'submit' name = 'next' value = 'Next')
+        if id == size
+            input(type = 'submit' name = 'finish' value = 'Finish')
+    br
+    p Display preference:
+    form(method='POST' action = '/question' name = 'next' id = 'display')
+        input(type = 'radio' name = 'vertical' value = 'Vertical')
+        label Vertical
+        input(type = 'radio' name = 'horizontal' value = 'Horizontal')
+        label Horizontal
+        input(type='submit' name='update' value='Update')

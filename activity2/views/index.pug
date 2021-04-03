@@ -1,0 +1,7 @@
+extends layout
+
+block content
+  h1 Welcome
+  form(method='POST' action='/' name='login' id='login')
+    input(type='text' name='username' placeholder='Username')
+    input(type='submit' value='Match')

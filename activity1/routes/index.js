@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs');
 const file = './comments.json';
-const article = fs.readFileSync('articles/article.txt', 'UTF-8');
+const article = fs.readFileSync('article.txt', 'UTF-8');
 const lines = article.split(/\r?\n/);
 let comments = [];
 let activities = [];
@@ -49,19 +49,14 @@ const update = function (action, req) {
 };
 
 const add = function (req) {
-  update('add', req);
   for (let i in comments) {
     if (comments[i].id === req.body.id) {
       result = 'Comment with given ID already exists.';
       console.log('Comment with given ID already exists.');
       return;
     }
-    if (req.body.comment === '') {
-      result = 'Comment cannot be empty.';
-      console.log('Comment cannot be empty.');
-      return;
-    }
   }
+  update('add', req);
   comments.push({'id': req.body.id, 'comment': req.body.comment});
   writeFile(comments);
   result = 'Comment added.';
@@ -69,9 +64,9 @@ const add = function (req) {
 };
 
 const del = function (req) {
-  update('del', req);
   for (let i in comments) {
     if (parseInt(comments[i].id) === parseInt(req.body.id)) {
+      update('del', req);
       comments.splice(i, 1);
       writeFile(comments);
       result = 'Comment deleted.';
@@ -166,4 +161,5 @@ function writeFile(comments){
   fs.writeFileSync(file, JSON.stringify(comments))
   console.log("Wrote to file.")
 }
+
 module.exports = router;

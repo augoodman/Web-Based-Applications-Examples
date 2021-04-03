@@ -1,0 +1,43 @@
+[
+  {
+    "id":"1","question":"Which neighborhood are you interested in living in?","options":
+    {
+      "option1": "New Tampa",
+      "option2": "Wesley Chapel",
+      "option3": "Lutz",
+      "option4": "Land 'O Lakes"
+    }
+  },
+  {
+    "id":"2","question":"How many other roommates are you looking to live with?","options":
+    {
+      "option1": "1",
+      "option2": "2",
+      "option3": "More than 2"
+    }
+  },
+  {
+    "id":"3","question":"What is your combined budget for rent and utilities","options":
+    {
+      "option1": "Less than $500",
+      "option2": "$500-$1000",
+      "option3": "$1000-$1500",
+      "option4": "1500-2000",
+      "option5": "More than $2000"
+    }
+  },
+  {
+    "id":"4","question":"Do you have any pet allergies?","options":
+    {
+      "option1": "Yes",
+      "option2": "No"
+    }
+  },
+  {
+    "id":"5","question":"Do you own pet(s)?","options":
+    {
+      "option1": "Yes",
+      "option2": "No"
+    }
+  }
+]
