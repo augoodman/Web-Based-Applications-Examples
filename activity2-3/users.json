@@ -3,11 +3,12 @@
         "user": "qwer",
         "responses": [
             null,
-            "New Tampa",
-            "1",
-            "Less than $500",
+            "Wesley Chapel",
+            "2",
+            null,
+            "No",
             "Yes",
-            "Yes"
+            "asdf"
         ]
     },
     {
@@ -15,10 +16,11 @@
         "responses": [
             null,
             "New Tampa",
-            "1",
-            "Less than $500",
-            "Yes",
-            "Yes"
+            null,
+            null,
+            null,
+            null,
+            "asdf"
         ]
     },
     {
@@ -26,10 +28,12 @@
         "responses": [
             null,
             "New Tampa",
-            "2",
-            "$1000-$1500",
-            "No",
-            "No"
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
         ]
     },
     {
@@ -94,5 +98,9 @@
             null,
             null
         ]
+    },
+    {
+        "user": "",
+        "responses": []
     }
 ]

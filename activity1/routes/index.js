@@ -1,6 +1,23 @@
+/**
+ * File: index.js
+ * SER 421
+ * Lab 3
+ *
+ * This file implements a Javascript-based article review service as specified in Activity 1.
+ *
+ * Functions are:
+ *    reset()
+ *    update(action, req)
+ *    add(req)
+ *    del(req)
+ *    readFile()
+ *    writeFile(comments)
+ */
+/* imports */
 const express = require('express');
 const router = express.Router();
 const fs = require('fs');
+/* global variables */
 const file = './comments.json';
 const article = fs.readFileSync('article.txt', 'UTF-8');
 const lines = article.split(/\r?\n/);
@@ -9,7 +26,16 @@ let activities = [];
 let result = '';
 let title = '';
 let body = '';
-
+/* functions */
+/*******************************************************************************************
+ * reset() - Resets all comments and user actions on the article.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 const reset = function () {
   activities = [];
   writeFile([]);
@@ -17,6 +43,15 @@ const reset = function () {
   console.log('User activities and comments reset.');
 };
 
+/*******************************************************************************************
+ * update(action, req) - Updates the stacks whenever a user adds or deletes a comment.
+ *
+ * arguments:
+ *   string - sets the user action type.
+ *
+ * returns:
+ *   nothing
+ */
 const update = function (action, req) {
   if (action === 'add') {
     activities.push('add,' + req.body.id + ',' + req.body.comment + ',' + req.get('user-agent'));
@@ -48,6 +83,15 @@ const update = function (action, req) {
   console.log('User activities updated.');
 };
 
+/*******************************************************************************************
+ * add(req) - Adds a comment to the article.
+ *
+ * arguments:
+ *   Object - contains request data.
+ *
+ * returns:
+ *   nothing
+ */
 const add = function (req) {
   for (let i in comments) {
     if (comments[i].id === req.body.id) {
@@ -63,6 +107,15 @@ const add = function (req) {
   console.log('Comment added.');
 };
 
+/*******************************************************************************************
+ * del(req) - Deletes a comment from the article.
+ *
+ * arguments:
+ *   Object - contains request data.
+ *
+ * returns:
+ *   nothing
+ */
 const del = function (req) {
   for (let i in comments) {
     if (parseInt(comments[i].id) === parseInt(req.body.id)) {
@@ -77,6 +130,35 @@ const del = function (req) {
   result = 'Comment with given ID does not exist.';
   console.log('Comment with given ID does not exist.');
 };
+
+/*******************************************************************************************
+ * readFile() - Helper function for reading data from comments.json
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
+function readFile(){
+  let jsonString = fs.readFileSync(file, 'utf8')
+  comments = JSON.parse(jsonString)
+  console.log("Read from file.")
+}
+
+/*******************************************************************************************
+ * writeFile(comments) - Helper function for writing data to comments.json
+ *
+ * arguments:
+ *   JSON Object - contains the data to be written to file.
+ *
+ * returns:
+ *   nothing
+ */
+function writeFile(comments){
+  fs.writeFileSync(file, JSON.stringify(comments))
+  console.log("Wrote to file.")
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -113,53 +195,28 @@ router.get('/view', function(req, res, next) {
   });
 });
 
+/* GET reset page. */
 router.get('/reset', function(req, res, next) {
   reset();
   res.redirect('/')
 });
 
+/* GET undo page. */
 router.get('/undo', function(req, res, next) {
   update('undo', req);
   res.redirect('/')
 });
 
+/* POST add page. */
 router.post('/add', function(req, res, next) {
   add(req);
   res.redirect('/')
 });
 
+/* POST delete page. */
 router.post('/delete', function(req, res, next) {
   del(req);
   res.redirect('/')
 });
-
-/*******************************************************************************************
- * readFile() - Helper function for reading data from comments.json
- *
- * arguments:
- *   none
- *
- * returns:
- *   nothing
- */
-function readFile(){
-  let jsonString = fs.readFileSync(file, 'utf8')
-  comments = JSON.parse(jsonString)
-  console.log("Read from file.")
-}
-
-/*******************************************************************************************
- * readFile() - Helper function for writing data to comments.json
- *
- * arguments:
- *   none
- *
- * returns:
- *   nothing
- */
-function writeFile(comments){
-  fs.writeFileSync(file, JSON.stringify(comments))
-  console.log("Wrote to file.")
-}
 
 module.exports = router;

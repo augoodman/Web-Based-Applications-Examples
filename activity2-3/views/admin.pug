@@ -1,0 +1,12 @@
+extends layout
+
+block content
+    h1 #{title}
+    form(method = 'POST' action = '/admin' name = 'login' id = 'login')
+        input(type = 'text' name = 'username' placeholder = 'Username')
+        br
+        input(type = 'password' name = 'password' placeholder = 'Password')
+        br
+        input(type = 'submit' name = 'login' value = 'Login')
+    if !authenticated
+        h5 Invalid credentials entered.

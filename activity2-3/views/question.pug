@@ -3,7 +3,7 @@ extends layout
 block content
     h1 #{title}
     h3 #{question}
-    form(method='POST' action = '/question' name = 'next' id = 'next')
+    form(method = 'POST' action = '/question' name = 'next' id = 'next')
         for i in options
             if i == response
                 input(type = 'radio' name = 'response' value = i checked)
@@ -20,9 +20,10 @@ block content
             input(type = 'submit' name = 'finish' value = 'Finish')
     br
     p Display preference:
-    form(method='POST' action = '/question' name = 'next' id = 'display')
-        input(type = 'radio' name = 'vertical' value = 'Vertical')
+    form(method = 'POST' action = '/question' name = 'next' id = 'display')
+        input(type = 'radio' name = 'preference' value = 'Vertical')
         label Vertical
-        input(type = 'radio' name = 'horizontal' value = 'Horizontal')
+        input(type = 'radio' name = 'preference' value = 'Horizontal')
         label Horizontal
-        input(type='submit' name='update' value='Update')
+        br
+        input(type = 'submit' name = 'update' value = 'Update')

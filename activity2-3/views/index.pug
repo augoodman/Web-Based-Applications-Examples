@@ -2,8 +2,9 @@ extends layout
 
 block content
   h1 Welcome
-  form(method='POST' action='/' name='login' id='login')
-    input(type='text' name='username' placeholder='Username')
-    input(type='submit' value='Match')
-  form(method='POST' action='/' name='admin_login' id='admin_login')
-    input(type='submit' value='Admin Login')
+  form(method = 'POST' action = '/' name = 'login' id = 'login')
+    input(type = 'text' name = 'username' placeholder = 'Username')
+    input(type = 'submit' name = 'login' value = 'Match')
+  br
+  form(method = 'POST' action = '/' name = 'admin_login' id = 'admin_login')
+    input(type = 'submit' name = 'admin_login' value = 'Admin Login')
