@@ -16,11 +16,12 @@
         "responses": [
             null,
             "New Tampa",
-            null,
-            null,
-            null,
-            null,
-            "asdf"
+            "1",
+            "Less than $500",
+            "Yes",
+            "Yes",
+            "asdf",
+            "qwer"
         ]
     },
     {
