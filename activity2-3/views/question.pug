@@ -5,7 +5,10 @@ block content
     h3 #{question}
     form(method='POST' action = '/question' name = 'next' id = 'next')
         for i in options
-            input(type = 'radio' name = 'response' value = i)
+            if i == response
+                input(type = 'radio' name = 'response' value = i checked)
+            else
+                input(type = 'radio' name = 'response' value = i)
             label= i
             if preference
                 br

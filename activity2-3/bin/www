@@ -5,7 +5,7 @@
  */
 
 var app = require('../app');
-var debug = require('debug')('activity2:server');
+var debug = require('debug')('activity2-3:server');
 var http = require('http');
 
 /**

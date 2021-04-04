@@ -1,0 +1,9 @@
+extends layout
+
+block content
+    h1 #{title}
+    each value, index in matchStrength
+        each val, key in matches
+            if val == size - index
+                ul
+                    li #{key} (#{value}% match)
