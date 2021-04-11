@@ -2,8 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="173aca8b-2558-4589-9baa-1f644bd4f86f" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/activity1/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/activity1/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/activity1/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/activity1/package.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/activity3/activity3.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/activity3/activity3.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/activity2/README.md" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -19,7 +22,7 @@
     </option>
   </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/activity1" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1qwzqccW3DhJE2a6RujpJPtUv6T" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -33,7 +36,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="javascript.nodejs.core.library.configured.version" value="10.19.0" />
     <property name="javascript.nodejs.core.library.typings.version" value="10.17.56" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/activity2" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
@@ -51,7 +54,10 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1618005632074</updated>
-      <workItem from="1618005633386" duration="40053000" />
+      <workItem from="1618005633386" duration="58474000" />
+      <workItem from="1618116380002" duration="52000" />
+      <workItem from="1618116435671" duration="801000" />
+      <workItem from="1618117407428" duration="1835000" />
     </task>
     <servers />
   </component>
@@ -68,5 +74,6 @@
         </entry>
       </map>
     </option>
+    <option name="oldMeFiltersMigrated" value="true" />
   </component>
 </project>
