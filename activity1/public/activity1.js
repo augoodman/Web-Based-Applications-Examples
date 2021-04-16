@@ -1,5 +1,5 @@
 /**
- * File: gui.js
+ * File: activity1.js
  * SER 421
  * Lab 5
  *
@@ -18,8 +18,8 @@ let convertForm = '<input type = "text" name = "dollars" id = "dollars" placehol
                   '<button name = "euro" id = "euro" onclick="postToServer(0)" disabled>Euro</button>' +
                   '<button name = "pound" id = "pound" onclick="postToServer(1)" disabled>Pound</button>' +
                   '<button name = "pop" id = "pop" onclick="ajaxResult(\'http://localhost:8008/pop\', \'pop\')">Pop</button>' +
-                  '<button name = "reset" id = "reset" onclick="resetHistory()">Reset</button>' +
-                  '<button name = "history" id = "history" onclick="showHistory()">History</button>'
+                  '<button name = "reset" id = "reset" onclick="ajaxResult(\'http://localhost:8008/reset\', \'reset\')">Reset</button>' +
+                  '<button name = "history" id = "history" onclick="ajaxResult(\'http://localhost:8008/history\', \'historyHtml\')">History</button>'
 
 /* functions */
 /*******************************************************************************************
@@ -34,7 +34,7 @@ let convertForm = '<input type = "text" name = "dollars" id = "dollars" placehol
 function startup(){
   document.getElementById('conversionHtml').innerHTML = '';
   document.getElementById('dollarsHtml').innerHTML = convertForm;
-  showHistory();
+  ajaxResult('http://localhost:8008/history', 'historyHtml');
 }
 
 function checkText(){
@@ -67,21 +67,40 @@ function showResponseText(req, resultRegion) {
     if(resultRegion === 'historyHtml'){
       let resJson = JSON.parse(req.responseText);
       let resHtml = '';
+      document.getElementById('reset').disabled = resJson.history.length === undefined;
       for(let i in resJson.history){
-        resHtml += '<li>Operand: ' + JSON.stringify(resJson.history[i].dollars) + ' was converted to ' + parseInt(resJson.history[i].dollars) * 0.9 + ' ' +
-            resJson.history[i].currency + ' IP: ' + resJson.history[i].ip + ' User-Details: ' + resJson.history[i].agent + '</li><br>';
+        resHtml += '<li>Operand: ' + JSON.stringify(resJson.history[i].dollars) + ' was converted to ' +
+            resJson.history[i].value.toFixed(2) + ' ' + resJson.history[i].currency + ' IP: ' + resJson.history[i].ip +
+            ' User-Details: ' + resJson.history[i].agent + '</li><br>';
       }
       document.getElementById(resultRegion).innerHTML = resHtml;
     }
     else if(resultRegion === 'pop'){
-      let popJson = JSON.parse(req.responseText).pop;
-      document.getElementById('conversionHtml').innerHTML = '<p>Currency Value is: ' +
-          popJson.value.toFixed(2) + ' in ' + popJson.currency;
-      document.getElementById('dollars').value = popJson.dollars;
-      ajaxResult('http://localhost:8008/history', 'historyHtml');
-      console.log(popJson)
+      if(req.responseText){
+        let popJson = JSON.parse(req.responseText);
+        if (popJson.pop !== undefined) {
+          ajaxResult('http://localhost:8008/history', 'historyHtml');
+          document.getElementById('conversionHtml').innerHTML = '<p>Currency Value is: ' +
+              popJson.pop.value.toFixed(2) + ' in ' + popJson.pop.currency;
+          document.getElementById('dollars').value = popJson.pop.dollars;
+        }
+        else {
+          document.getElementById('conversionHtml').innerHTML = '';
+          document.getElementById('dollars').value = '';
+          document.getElementById('historyHtml').innerHTML = '';
+        }
+      }
     }
-    //{"pop": "Operand: 50 was converted to 45 Euro IP: ::ffff:127.0.0.1 User-Details: Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:87.0) Gecko/20100101 Firefox/87.0"}
+    else if(resultRegion === 'reset'){
+      if(JSON.parse(req.responseText).reset){
+        document.getElementById('conversionHtml').innerHTML = '';
+        document.getElementById('dollars').value = '';
+        document.getElementById('historyHtml').innerHTML = '';
+      }
+    }
+  }
+  else if(req.status >= 400){
+    handleError(JSON.parse(req.responseText));
   }
 }
 
@@ -103,8 +122,9 @@ function postToServer(currency) {
         document.getElementById('conversionHtml').innerHTML = '<p>Currency Value is: ' +
             resJson.value.toFixed(2) + ' in ' + resJson.currency;
         ajaxResult('http://localhost:8008/history', 'historyHtml');
-      } else { // handle request failure
-        document.getElementById("conversionHtml").innerHTML = "Error retrieving response from server";
+      }
+      else if(req.status >= 400){
+        handleError(JSON.parse(req.responseText));
       }
     }
   }
@@ -112,36 +132,18 @@ function postToServer(currency) {
   return req;
 }
 
-function convertToPound(){
-
-}
-
-function popStack(){
-
-}
-
-function resetHistory(){
-
-}
-
-function showHistory(){
-
-}
-
-/*******************************************************************************************
- * isJson(string)() - Alerts user to inactivity after 30 seconds since last action.
- *
- * arguments:
- *   string - data to be validated/invalidated as JSON
- *
- * returns:
- *   boolean - JSON status
- */
-function isJson(string){
-  try{
-    JSON.parse(string);
-  }catch (e){
-    return false;
+function handleError(res){
+  document.getElementById('conversionHtml').innerHTML = '<h1>' + res.error + '</h1>';
+  document.getElementById('dollars').outerHTML = '<strong>' + res.message;
+  document.getElementById('euro').outerHTML = '';
+  document.getElementById('pound').outerHTML = '';
+  document.getElementById('pop').outerHTML = '';
+  document.getElementById('reset').outerHTML = '';
+  document.getElementById('history').outerHTML = '';
+  if(res.trace) {
+    document.getElementById('historyHtml').outerHTML = res.trace;
   }
-  return true;
+  else{
+    document.getElementById('historyHtml').outerHTML = '';
+  }
 }
