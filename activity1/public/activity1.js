@@ -3,15 +3,17 @@
  * SER 421
  * Lab 5
  *
- * This file implements a Javascript-based SPA for accessing a currency converter API
- * as specified in activity 1.
+ * This file implements a Javascript-based SPA for accessing a currency converter API as
+ * specified in activity 1.
  *
  * Functions are:
  *    startup()
- *    login()
- *    comment()
- *    idle()
- *    isJson(string)
+ *    checkText()
+ *    getRequestObject()
+ *    ajaxResult(address, resultRegion)
+ *    showResponseText(req, resultRegion)
+ *    postToServer(currency)
+ *    handleError(res)
  */
 /* global variables */
 let convertForm = '<input type = "text" name = "dollars" id = "dollars" placeholder = "Enter in USD" onkeyup="checkText()">' +
@@ -37,6 +39,15 @@ function startup(){
   ajaxResult('http://localhost:8008/history', 'historyHtml');
 }
 
+/*******************************************************************************************
+ * checkText() - Disables Euro and Pound buttons if text box is empty or NaN.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 function checkText(){
   if(!isNaN(document.getElementById('dollars').value)) {
     document.getElementById('euro').disabled = document.getElementById('dollars').value.length <= 0;
@@ -44,6 +55,15 @@ function checkText(){
   }
 }
 
+/*******************************************************************************************
+ * getRequestObject() - Gets the XHR object if it exists.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   Object - The XHR object if it exists; returns null otherwise.
+ */
 function getRequestObject() {
   if (window.XMLHttpRequest) {
     return(new XMLHttpRequest());
@@ -52,6 +72,16 @@ function getRequestObject() {
   }
 }
 
+/*******************************************************************************************
+ * ajaxResult(address, resultRegion) - Handles AJAX GET requests.
+ *
+ * arguments:
+ *   String - the URI for the desired API endpoint.
+ *   String - describes the DOM element(s) to be updated.
+ *
+ * returns:
+ *   nothing
+ */
 function ajaxResult(address, resultRegion) {
   const req = getRequestObject();
   req.onreadystatechange =
@@ -61,6 +91,16 @@ function ajaxResult(address, resultRegion) {
   req.send(null);
 }
 
+/*******************************************************************************************
+ * showResponseText(req, resultRegion) - Updates the DOM after AJAX GET request.
+ *
+ * arguments:
+ *   Object - the request object containing the response.
+ *   String - describes the DOM element(s) to be updated.
+ *
+ * returns:
+ *   nothing
+ */
 function showResponseText(req, resultRegion) {
   if ((req.readyState === 4) &&
       (req.status === 200)) {
@@ -70,8 +110,8 @@ function showResponseText(req, resultRegion) {
       document.getElementById('reset').disabled = resJson.history.length === undefined;
       for(let i in resJson.history){
         resHtml += '<li>Operand: ' + JSON.stringify(resJson.history[i].dollars) + ' was converted to ' +
-            resJson.history[i].value.toFixed(2) + ' ' + resJson.history[i].currency + ' IP: ' + resJson.history[i].ip +
-            ' User-Details: ' + resJson.history[i].agent + '</li><br>';
+            resJson.history[i].value.toFixed(2) + ' ' + resJson.history[i].currency + ' IP: ' +
+            resJson.history[i].ip + ' User-Details: ' + resJson.history[i].agent + '</li><br>';
       }
       document.getElementById(resultRegion).innerHTML = resHtml;
     }
@@ -104,6 +144,15 @@ function showResponseText(req, resultRegion) {
   }
 }
 
+/*******************************************************************************************
+ * postToServer(currency) - Updates the DOM after AJAX GET request.
+ *
+ * arguments:
+ *   String - describes the currency to which to convert USD.
+ *
+ * returns:
+ *   Object - The request object containing the response.
+ */
 function postToServer(currency) {
   let dollars = document.getElementById('dollars').value;
   let req = new XMLHttpRequest();
@@ -132,6 +181,15 @@ function postToServer(currency) {
   return req;
 }
 
+/*******************************************************************************************
+ * handleError(res) - Displays error information to the user.
+ *
+ * arguments:
+ *   Object - Contains error data.
+ *
+ * returns:
+ *   nothing
+ */
 function handleError(res){
   document.getElementById('conversionHtml').innerHTML = '<h1>' + res.error + '</h1>';
   document.getElementById('dollars').outerHTML = '<strong>' + res.message;

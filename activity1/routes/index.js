@@ -1,7 +1,21 @@
+/**
+ * File: index.js
+ * SER 421
+ * Lab 5
+ *
+ * This file implements an Express server for the handling of client API requests for
+ * as specified in activity 1.
+ *
+ * Functions are:
+ *    badRequest(res)
+ *    serverError(res, error)
+ */
+/* imports */
 const express = require('express');
+
+/* global variables */
 const router = express.Router();
 const requestIp = require('@supercharge/request-ip')
-
 let historyStack = [];
 
 /* GET SPA page */
@@ -116,6 +130,15 @@ router.get('/api', function(req, res, next) {
   }
 });
 
+/*******************************************************************************************
+ * badRequest(res) - Server-side handling for client errors.
+ *
+ * arguments:
+ *   Object - Contains response data.
+ *
+ * returns:
+ *   nothing
+ */
 function badRequest(res) {
   res.status(400).send({
     message: 'Bad request.',
@@ -123,6 +146,16 @@ function badRequest(res) {
   });
 }
 
+/*******************************************************************************************
+ * serverError(res, error) - Server-side handling for server errors.
+ *
+ * arguments:
+ *   Object - Contains response data.
+ *   Object - Contains error data.
+ *
+ * returns:
+ *   nothing
+ */
 function serverError(res, error) {
   res.status(500).send({
     message: 'Internal server error.',
@@ -131,4 +164,5 @@ function serverError(res, error) {
   });
 }
 
+/* exports */
 module.exports = router;

@@ -1,3 +1,24 @@
+/**
+ * File: activity2.js
+ * SER 421
+ * Lab 5
+ *
+ * This file implements a Javascript-based SPA for accessing the GitHub API as specified in
+ * activity 2.
+ *
+ * Functions are:
+ *    getRepos()
+ *    getNextRepo(repo)
+ *    buildTable(data)
+ *    getLanguages(repo, languages)
+ *    getBranches(url)
+ *    getOtherRepos(data)
+ *    getRefreshBtn()
+ *    getIssues()
+ *    refresh()
+ *    displayError(error)
+ */
+/* global variables */
 let user = '';
 let repo1 = {};
 let repo2 = {};
@@ -12,6 +33,16 @@ let repoList = [];
 let refreshing = false;
 let list = [];
 
+/* functions */
+/*******************************************************************************************
+ * getRepos() - Retrieves data for up to two repositories for a given user.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 async function getRepos() {
     results1 = '';
     results2 = '';
@@ -42,9 +73,16 @@ async function getRepos() {
         });
 }
 
+/*******************************************************************************************
+ * getNextRepo(repo) - Adds an additional repository to the table.
+ *
+ * arguments:
+ *   String - the name of the repository to add
+ *
+ * returns:
+ *   nothing
+ */
 async function getNextRepo(repo) {
-    console.log('repo')
-    console.log(repo)
     let nextRepo = {};
     for (let i in repos) {
         if (repos[i].name === repo) {
@@ -61,8 +99,6 @@ async function getNextRepo(repo) {
         }
     }
     let newResults = results1;
-    console.log('newResults')
-    console.log(newResults)
     newResults.replace('</table>', '');
     newResults +=
         '  <tr>\n' +
@@ -83,7 +119,8 @@ async function getNextRepo(repo) {
             newResults +=
                 '<br>Language URL:<br><a href="' + url + '">' + url + '</a></td>' +
                 '<td><a href="' + nextRepo.downloads_url + '">' + nextRepo.downloads_url + '</a></td>\n' +
-                '<td><button name="branch_btn" id="branch_btn" onclick="getBranches(' + "'" + nextRepo.branches_url.replace('{/branch}', '') + "'" + ')">Branches</button></td>';
+                '<td><button name="branch_btn" id="branch_btn" onclick="getBranches(' + "'" +
+                nextRepo.branches_url.replace('{/branch}', '') + "'" + ')">Branches</button></td>';
             results1 = newResults;
             document.getElementById('results').innerHTML = newResults + '</table>';
             getLanguages(repo1, languages1);
@@ -97,6 +134,15 @@ async function getNextRepo(repo) {
         });
 }
 
+/*******************************************************************************************
+ * getNextRepo(repo) - Adds an additional repository to the table.
+ *
+ * arguments:
+ *   String - the name of the repository to add
+ *
+ * returns:
+ *   nothing
+ */
 function buildTable(data) {
     if(!refreshing) {
         repo1 = data[Math.floor(Math.random() * data.length)];
@@ -203,6 +249,17 @@ function buildTable(data) {
     getRefreshBtn();
 }
 
+/*******************************************************************************************
+ * getLanguages(repo, languages) - Makes a call to the languages endpoint for a given
+ *  repository.
+ *
+ * arguments:
+ *   Object - The repository for which to get language data
+ *   String - HTML string for displaying data to a particular repository
+ *
+ * returns:
+ *   nothing
+ */
 async function getLanguages(repo, languages) {
     let url = repo.languages_url;
     await fetch(url)
@@ -223,6 +280,15 @@ async function getLanguages(repo, languages) {
         });
 }
 
+/*******************************************************************************************
+ * getBranches(url) - Displays information about a repository's branches to the user.
+ *
+ * arguments:
+ *   String - The URL for the desired branches endpoint
+ *
+ * returns:
+ *   nothing
+ */
 function getBranches(url) {
     let branches = ''
     fetch(url)
@@ -253,6 +319,16 @@ function getBranches(url) {
         });
 }
 
+/*******************************************************************************************
+ * getOtherRepos(data) - Populates a dropdown list for displaying data for up to five other
+ *  repositories to the table.
+ *
+ * arguments:
+ *   Object - Contains data for a user's repositories
+ *
+ * returns:
+ *   nothing
+ */
 function getOtherRepos(data) {
     let temp;
     if(!refreshing){
@@ -304,11 +380,29 @@ function getOtherRepos(data) {
     document.getElementById('list').innerHTML = repos;
 }
 
+/*******************************************************************************************
+ * getRefreshBtn() - Displays a Refresh button to the user.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 function getRefreshBtn() {
     document.getElementById('refresh').innerHTML =
         '<button name="get_details" id="get_details" onclick="refresh()">Refresh</button>';
 }
 
+/*******************************************************************************************
+ * getIssues() - Displays information about open repository issues to the user.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 function getIssues() {
     let mostNum = 0;
     let mostName = '';
@@ -328,6 +422,15 @@ function getIssues() {
     }
 }
 
+/*******************************************************************************************
+ * refresh() - Refreshes the data displayed for all repositories in the table.
+ *
+ * arguments:
+ *   none
+ *
+ * returns:
+ *   nothing
+ */
 async function refresh() {
     refreshing = true;
     await getRepos();
@@ -342,6 +445,15 @@ async function refresh() {
     refreshing = false;
 }
 
+/*******************************************************************************************
+ * displayError(error) - Displays errors to the user.
+ *
+ * arguments:
+ *   Object - contains error data.
+ *
+ * returns:
+ *   nothing
+ */
 function displayError(error){
     document.getElementById('issues').innerHTML = '<p>Error: ' + JSON.stringify(error);
     document.getElementById('results').innerHTML = '';
