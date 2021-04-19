@@ -1,0 +1,10 @@
+/.*/
+!/.styleguidist
+node_modules
+Jenkinsfile
+target
+*.tgz
+src/
+*.iml
+coverage/
+test/
